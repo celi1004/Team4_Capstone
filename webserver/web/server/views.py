@@ -2,12 +2,16 @@
 # from .models import Server
 # from .serializer import ServerSerializer
 #from django.http import HttpResponse, JsonResponse
+import json
+
 from django.http import Http404
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import Server
 from .serializer import ServerSerializer
+from .crawling import naverlogin
+
 
 # from rest_framework.renderers import JSONRenderer
 
@@ -35,6 +39,9 @@ class ServerList(APIView):
         serializer = ServerSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
+            diction = json.loads(serializer.data)
+            crawling.naverlogin.naverStart(diction["title"], diction["body"])
+            
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     

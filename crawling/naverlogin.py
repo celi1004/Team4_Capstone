@@ -5,7 +5,10 @@ from bs4 import BeautifulSoup as bs
 import re
 import returnKeyword
 
-if __name__ == "__main__":
+#if __name__ == "__main__":
+def naverStart(t, b):
+    print(t, b)
+    #return
     naver = Naver('', '')
     clubid = "10050146"
     menuid = "358"
