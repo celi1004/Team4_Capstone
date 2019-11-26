@@ -1,5 +1,5 @@
 from selenium import webdriver
-from . import driverutils as DriverUtils
+from .driverutils import DriverUtils
 #from utils.winkeyboard import WinKeyboard
 import time
 

@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-from . import naver as Naver
+from .naver import Naver
 import time
 from bs4 import BeautifulSoup as bs
 import re
@@ -103,8 +103,8 @@ def naverStart(t, b):
 
     # print("--- %s seconds ---" % (time.time() - start_time)) 20sec
 
-    naver.driver.quit()
-
+    naver.driver.close()
+    
     return_list = returnKeyword.main(input)
 
     for r in return_list:

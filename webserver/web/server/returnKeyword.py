@@ -4,9 +4,13 @@ from pprint import pprint
 from konlpy.tag import Okt
 import gensim
 import operator
+from gensim.test.utils import datapath
 
 okt = Okt()
-model = gensim.models.Word2Vec.load('./model30000_20_4')
+
+model = gensim.models.Word2Vec.load("./model30000_20_4")
+# model = gensim.models.Word2Vec.load_word2vec_format('model30000_20_4.bin', binary=True)
+# model = gensim.models.KeyedVectors.load_word2vec_format(datapath('model30000_20_4'), binary=False)
 #fastTextModel = gensim.models.FastText.load('./fastTextModel')
 #fastTextModel = gensim.models.Word2Vec.load('./ko.bin')
 word_vectors = model.wv

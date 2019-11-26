@@ -10,7 +10,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import Server
 from .serializer import ServerSerializer
-from .crawling import naverlogin
+from . import naverlogin
 
 
 # from rest_framework.renderers import JSONRenderer
@@ -37,10 +37,18 @@ from .crawling import naverlogin
 class ServerList(APIView):
     def post(self, request, format=None):
         serializer = ServerSerializer(data=request.data)
+        print("포스트 요청 !")
+        print(type(request.data))
         if serializer.is_valid():
             serializer.save()
-            diction = json.loads(serializer.data)
-            crawling.naverlogin.naverStart(diction["title"], diction["body"])
+            naverlogin.naverStart(request.data['title'] , request.data['body'])
+            # print(type(serializer.data))
+            # diction = json.loads(request.data)
+            # naverlogin.naverStart(request.data['title'], request.data['body'])
+            # naverlogin.naverStart(1,2)
+            # print(request.data['title'])
+            # naverlogin.naverStart(request.data["title"],request.data["body"])
+            
             
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
