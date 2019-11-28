@@ -5,13 +5,14 @@ from bs4 import BeautifulSoup as bs
 import re
 from . import returnKeyword
 
+from multiprocessing import Pool
+
 #if __name__ == "__main__":
-def naverStart(t, b):
-    print(t, b)
+def naverStart(category, keyword, number):
     #return
     naver = Naver('', '')
     clubid = "10050146"
-    menuid = "358"
+
     #네이버 로그인
     try:
         naver.clipboard_login("siso9800", "dundunsh!")
@@ -21,31 +22,46 @@ def naverStart(t, b):
     # line = []
 
     input = []
-    input.append(['남성상의', '이름', '브랜드', '가격', '상태', '색상', '거래방식', '착용횟수', '사이즈'])
+    # print(type(keyword))
+    # print(keyword)
+    keyword = keyword.replace(",", "")
+    keyword = keyword.replace("[", "")
+    keyword = keyword.replace("]", "")
+    print(keyword)
+    key = keyword.split(" ")
+    key.insert(0, category)
+    # print(key)
+    input.append(key)
+    #input.append([category, '이름', '브랜드', '가격', '색상', '거래방식', '착용횟수', '사이즈'])
     index = []
-    tit = ""
+    ti = ""
     pri = ""
     con = ""
 
     #페이지마다 크롤링
     # start_time = time.time()
 
-    data = []
+    number = number.replace(",", "")
+    number = number.replace("[", "")
+    number = number.replace("]", "")
+    data = number.split(" ")
+    # print(type(data))
+    # print(data)
     #페이지 이동
-    start_time = time.time()
-    naver.driver.get("https://cafe.naver.com/ArticleList.nhn?search.clubid=" + clubid + "&search.menuid=" + menuid + "&search.boardtype=L&search.totalCount=151&search.page=1")
-    #중고나라 프레임 변환
-    naver.driver.switch_to_frame('cafe_main')
-    html = naver.driver.page_source
-    soup = bs(html, 'html.parser')  # html의 관점에서 이해해라!
-    #게시글 번호 크롤링
-    id = soup.select(
-        'div[class=inner_number]'  # class가 inner_number인 div 태그 수집
-    )
+    # start_time = time.time()
+    # naver.driver.get("https://cafe.naver.com/ArticleList.nhn?search.clubid=" + clubid + "&search.menuid=" + menuid + "&search.boardtype=L&search.totalCount=151&search.page=1")
+    # #중고나라 프레임 변환
+    # naver.driver.switch_to_frame('cafe_main')
+    # html = naver.driver.page_source
+    # soup = bs(html, 'html.parser')  # html의 관점에서 이해해라!
+    # #게시글 번호 크롤링
+    # id = soup.select(
+    #     'div[class=inner_number]'  # class가 inner_number인 div 태그 수집
+    # )
 
     #게시글 번호 저장
-    for i in id:
-        data.append(i.text)
+    # for i in id:
+    #     data.append(i.text)
 
     # mobile
     temp = []
@@ -106,6 +122,24 @@ def naverStart(t, b):
     naver.driver.close()
     
     return_list = returnKeyword.main(input)
+    
+    temp = ""
+    return_dict = {}
+    for i in range(len(data)):
+        temp = ""
+        for j in range(len(return_list[0])):
+            temp += key[j+1] + " : " + str(return_list[i][j]) + " | "
+            # print(type(data[i]))
+            # print(type(int(data[i])))
+            # print(data[i])
+        # print(temp)
+        return_dict[int(data[i])] = temp
+    
+    # print(return_dict)
+    for key, value in return_dict.items():
+        print(type(key), type(value))
 
-    for r in return_list:
-        print(r)
+    # for r in return_list:
+    #     print(r)
+    
+    return return_dict
