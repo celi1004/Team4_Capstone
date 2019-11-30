@@ -21,11 +21,11 @@ def naverStart(category, keyword, number):
         time.sleep(0.5)
 
     input = []
-    keyword = keyword.replace(",", "")
+    # keyword = keyword.replace(",", "")
     keyword = keyword.replace("[", "")
     keyword = keyword.replace("]", "")
-    # print(keyword)
-    key = keyword.split(" ")
+    keyword = keyword.replace("\'", "")
+    key = keyword.split(",")
     key.insert(0, category)
     input.append(key)
     #input.append([category, '이름', '브랜드', '가격', '색상', '거래방식', '착용횟수', '사이즈'])
@@ -34,10 +34,12 @@ def naverStart(category, keyword, number):
     # pri = 0
     # con = ""
 
-    number = number.replace(",", "")
+    # number = number.replace(",", "")
     number = number.replace("[", "")
     number = number.replace("]", "")
-    data = number.split(" ")
+    number = number.replace("\'", "")
+    data = number.split(",")
+    print(data)
 
     # link=[]
     # for i in range(len(data)/2):
@@ -117,8 +119,8 @@ def naverStart(category, keyword, number):
     for i in range(len(data)):
         temp = ""
         for j in range(len(return_list[0])):
-            temp += key[j+1] + " : " + str(return_list[i][j]) + " | "
-        return_dict[int(data[i])] = temp
+            temp += "{:20}".format(str(key[j+1]) + " : " + str(return_list[i][j]))
+        return_dict[data[i]] = temp
     
     # for key, value in return_dict.items():
     #     print(type(key), type(value))

@@ -327,7 +327,7 @@ def selected_keyword(keyword_list, input_phrases):
 
         docs_list = tokenize(string_list) #원하는 pos의 토큰들만 추출
         #[okt.pos(doc, norm=True, stem=True) for doc in input_strings]
-
+        find_keyword = ""
         for keyword in keyword_list[1:]:
             if keyword == '이름':
                 find_keyword = getName(docs_list)

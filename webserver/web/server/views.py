@@ -18,7 +18,8 @@ class ServerList(APIView):
         start = time.time()
         return_data = naverlogin.naverStart(request.data['category'] , request.data['keyword'], request.data['number'])
         print(time.time() - start)
-        
+
+
         for key, value in return_data.items():
             ser = Server()
             ser.number = key
