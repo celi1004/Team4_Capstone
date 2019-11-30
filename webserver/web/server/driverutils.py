@@ -22,4 +22,4 @@ class DriverUtils(object):
         ActionChains(self.driver).key_down(Keys.CONTROL).send_keys('v').key_up(Keys.CONTROL).perform()
 
         pyperclip.copy(temp_user_input)  # 사용자 클립보드에 저장 된 내용을 다시 가져 옴
-        time.sleep(1)
+        time.sleep(0.5)
