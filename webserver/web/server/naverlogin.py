@@ -35,7 +35,7 @@ def naverStart(category, keyword, number):
     #input.append([category, '이름', '브랜드', '가격', '색상', '거래방식', '착용횟수', '사이즈'])
     index = []
     ti = ""
-    pri = ""
+    pri = 0
     con = ""
 
     #페이지마다 크롤링
@@ -68,6 +68,9 @@ def naverStart(category, keyword, number):
     #한 페이지의 15개 게시물 크롤링
     for i in range(len(data)):
         index = []
+        ti = ""
+        pri = 0
+        con = ""
         #게시글 번호로 접근
         naver.driver.get('https://m.cafe.naver.com/ArticleRead.nhn?clubid=' + clubid + '&articleid=' + data[i])
         html = naver.driver.page_source

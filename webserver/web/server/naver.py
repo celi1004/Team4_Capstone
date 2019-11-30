@@ -21,10 +21,10 @@ class Naver(object):
         self.driver = webdriver.Chrome('chromedriver.exe', chrome_options=options)
         self.driver.get('https://naver.com')
 
-        time.sleep(1)
-        self.driver.quit()
-        self.driver = webdriver.Chrome('chromedriver.exe', chrome_options=options)
-        self.driver.get('https://naver.com')
+        # time.sleep(1)
+        # self.driver.quit()
+        # self.driver = webdriver.Chrome('chromedriver.exe', chrome_options=options)
+        # self.driver.get('https://naver.com')
         #alert 창 닫기
         # alert = self.driver.switch_to_alert()
         # # assert "alert창" in alert.text
