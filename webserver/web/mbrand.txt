@@ -1,4 +1,4 @@
-스테이지/Noun
+﻿스테이지/Noun
 파타고니아/Noun
 노스/Noun
 르꼬끄/Noun
@@ -330,7 +330,6 @@
 바나나/Noun
 버버리/Noun
 듀퐁/Noun
-초특/Noun
 다이나핏/Noun
 사카이/Noun
 뉴욕양키스/Noun
@@ -427,7 +426,7 @@
 토크/Noun
 오디세이/Noun
 연두/Noun
-에어/Noun
+
 써밋/Noun
 아프리카/Noun
 아베크롬비/Noun
@@ -493,8 +492,13 @@
 슬라이드/Noun
 다이나모/Noun
 조던/Noun
-아쉽다/Adjective
+
 뉴에라/Noun
 슈퍼/Noun
 자외선/Noun
 스코노/Noun
+
+Jeep/Alpha
+LIST/Alpha
+TOMBOY/Alpha
+KUHO/Alpha

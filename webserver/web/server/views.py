@@ -15,9 +15,13 @@ class ServerList(APIView):
         s = Server.objects.all()
         s.delete()
 
-        start = time.time()
-        return_data = naverlogin.naverStart(request.data['category'] , request.data['keyword'], request.data['number'])
-        print(time.time() - start)
+        # print(request.data['category'])
+        # print(request.data['keyword'])
+        # print(request.data['crawlingData'])
+
+        #start = time.time()
+        return_data = naverlogin.naverStart(request.data['category'] , request.data['keyword'], request.data['crawlingData'])
+        #print(time.time() - start)
 
 
         for key, value in return_data.items():
