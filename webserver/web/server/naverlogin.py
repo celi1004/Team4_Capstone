@@ -1,11 +1,11 @@
 # -*- coding:utf-8 -*-
-from .naver import Naver
+# from .naver import Naver
 import time
-from bs4 import BeautifulSoup as bs
-import re
+# from bs4 import BeautifulSoup as bs
+# import re
 from . import returnKeyword
 
-from multiprocessing import Pool
+# from multiprocessing import Pool
 
 #if __name__ == "__main__":
 def naverStart(category, keyword, crawlingData):
