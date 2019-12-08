@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+
+  <script type="text/javascript" src="jquery-3.4.1.js"></script>
+  <script type="text/javascript" src="jquery-ui.min.js" ></script>
+  <script type="text/javascript" src="jquery-ui.js" ></script>
+  <script src="ClickBtn.js"></script>
+
+  <style>
+  @import url(https://fonts.googleapis.com/css?family=Open+Sans);
+  @import url(http://fonts.googleapis.com/earlyaccess/hanna.css);
+
+  *{
+    margin: 0;
+  }
+  body{
+    background: white;
+    font-family: 'Hanna';
+  }
+
+  header {
+    position: fixed;
+    display: block;
+    width: 100%;
+    height: 60px;
+    background-image: linear-gradient(to bottom, rgba(255,255,255,1),  rgba(255,255,255,1), rgba(255,255,255,0.2));
+    padding: 0px 15px 5px 15px;
+    z-index: 100;
+    box-shadow: 0 1px 3px 0 rgba(0,0,0,0.2), 0 0 3px 0 rgba(0,0,0,0.2)
+  }
+
+  header > .logoBox {
+    position: relative;
+    width: 40px;
+    height: 100%;
+  }
+
+  header > .logoBox > img {
+    position: relative;
+    top: 55%;
+    transform: translate(0, -50%);
+    width:100%;                               /* 30px */
+    height:60%;                               /* 30px */
+  }
+
+  header > .logoTitle {
+    position: absolute;
+    cursor: default;
+    top:60%; left: 65px;
+    transform: translate(0, -50%);
+    width:auto; height:30px;
+    font-size: 2em;
+  }
+
+  p{
+    cursor: pointer;
+  }
+
+  i{
+    cursor: pointer;
+  }
+
+  .search {
+    width: 100%;
+    position: relative;
+    display: flex;
+  }
+  /*Resize the wrap to see the search bar change!*/
+  .wrap{
+    width: 90%;
+    position: absolute;
+    top: 14%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .searchKeyword{
+
+    border: 3px solid #00B4CC;
+    border-radius: 8px 5px 8px 5px;
+    width: 100%;
+    min-height: 50px;
+    height: 50px;
+    outline: none;
+    display: inline-block;
+    white-space: nowrap;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    color: rgba(0,180,204,0.7);
+    font-size: 17px;
+  }
+
+  .searchKeyword ul{
+    margin: 7px 0 0 7px;
+    padding: 0;
+    display: inline-block;
+    position: relative;
+    width: 95%;
+    height: 85%;
+  }
+
+  .searchKeyword ul li{
+    list-style: none;
+    display: inline-block;
+  }
+
+  .searchKeyword ul li .btn{
+    margin: 2px;
+    padding: 5px;
+    display: inline-block;
+    position: relative;
+    width: auto;
+    height: 20px;
+    background-color: #fff;
+    border-radius: 10%;
+    text-align: center;
+    text-decoration: none;
+    overflow: hidden;
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.2), 0 0 2px 0 rgba(0,0,0,0.2);
+  }
+
+  .searchKeyword ul li .btn:hover{
+    color: #44646A;
+  }
+
+  .searchKeyword ul li .btn p{
+    display: block;
+    float: left;
+    line-height: 20px;
+  }
+
+  .searchKeyword ul li .btn .del_keyword:hover{
+    color: #00B4CC;
+  }
+
+  .placeholder {
+    margin: 0px 3px 0px 3px;
+    padding: 7px;
+    width: 50px;
+    height: 13px;
+    border: 2px dashed #90A4AE;
+  }
+
+  .categorie{
+    display: inline-block;
+    height: 600px;
+    width: 100%;
+    position: absolute;
+    top: 20%;
+  }
+
+  .categorieText{
+    border: 1px solid #90A4AE;
+    border-bottom: none;
+    border-left: none;
+    border-right: none;
+    display: inline-block;
+    overflow: hidden;
+    padding: 10px;
+    top: 25%;
+    width: 95%;
+    height: auto;
+    color: #90A4AE;
+    font-size: 1.2em;
+  }
+
+  .categorieText .categorieName{
+    position: relative;
+  }
+
+  .categorieText ul{
+    padding: 10px;
+    position: relative;
+    display: inline-block;
+    top: 65%;
+    width: auto;
+  }
+
+  .categorieText ul li{
+    list-style: none;
+    float: left;
+  }
+
+  .categorieText ul li a{
+    margin: 5px;
+    padding: 2px 17px 2px 15px;
+    display: inline-block;
+    position: relative;
+    width: auto;
+    height: 30px;
+    background-color: rgba(0,180,204,0.15);
+    border-radius: 10%;
+    text-align: center;
+    text-decoration: none;
+    overflow: hidden;
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.2), 0 0 2px 0 rgba(0,0,0,0.2);
+  }
+
+  .categorieText ul li .btn:before{
+    content: '';
+    position: absolute;
+    padding: 2px 5px 2px 5px !important;
+    top: 100%;
+    left:0;
+    width: 100%;
+    height: 100%;
+    background-color: #32B2B2;
+    transition: 0.3s;
+  }
+
+  .categorieText ul li .btn:hover:before{
+    top:0;
+  }
+
+  .categorieText ul li a i{
+    display: block;
+    line-height: 30px;
+    font-size: 1.2em;
+    color: #44646A;
+    transition: 0.3s;
+  }
+
+  .categorieText ul li .btn:hover i{
+    transform: translateY(-100%);
+    font-size: 1.2em;
+    color: #fff;
+  }
+
+  .change{
+    top: 82%;
+    height: 100px;
+    position: absolute;
+    transform: translateX(55px);
+  }
+
+  .change .btn p{
+    display: block;
+    width: 100px;
+    height: 40px;
+    background-color: #32B2B2;
+    border-radius: 10%;
+    border: 2px solid #32B2B2;
+    outline: none;
+    text-align: center;
+    font-size: 1.8em;
+    line-height: 40px;
+    color: #fff;
+    float: left;
+    margin: 70px 0 0 30px;
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.2), 0 0 2px 0 rgba(0,0,0,0.2);
+  }
+
+  .change .btn .change_Btn:hover{
+    box-shadow: 0 1px 4px 0 rgba(0,0,0,0.5), 0 0 4px 0 rgba(0,0,0,0.5);
+  }
+
+
+  </style>
+
+</head>
+
+<body>
+  <header>
+      <div class="logoBox">
+        <img src="images/title3.png">
+      </div>
+      <div class = "logoTitle">
+        제몫
+      </div>
+    </header>
+
+  <div class="lnb" id="_sidebar">
+    <div class="wrap">
+      <div class="search">
+        <div class="searchKeyword">
+          <ul id="addedKeywordForm">
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="categorie">
+      <div class="categorieText">
+        <p class="categorieName">공통</p>
+        <ul>
+          <li>
+            <a class="btn" id="상품명" name="keyword" href="#">
+              <i class="fab">상품명</i>
+              <i class="fab">+</i>
+            </a>
+          </li>
+          <li>
+            <a class="btn" id="브랜드" name="keyword" herf="#">
+              <i class="fab">브랜드</i>
+              <i class="fab">+</i>
+            </a>
+          </li>
+          <li>
+            <a class="btn" id="가격" name="keyword" herf="#">
+              <i class="fab">가격</i>
+              <i class="fab">+</i>
+            </a>
+          </li>
+          <li>
+            <a class="btn" id="상태" name="keyword" herf="#">
+              <i class="fab">상태</i>
+              <i class="fab">+</i>
+            </a>
+          </li>
+          <li>
+            <a class="btn" id="색상" name="keyword" herf="#">
+              <i class="fab">색상</i>
+              <i class="fab">+</i>
+            </a>
+          </li>
+          <li>
+            <a class="btn" id="거래방식" name="keyword" herf="#">
+              <i class="fab">거래방식</i>
+              <i class="fab">+</i>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="categorieText" id="의류">
+        <p class="categorieName">의류</p>
+        <ul>
+          <li>
+            <a class="btn" id="착용횟수" name="keyword" herf="#">
+              <i class="fab">착용횟수</i>
+              <i class="fab">+</i>
+            </a>
+          </li>
+          <li>
+            <a class="btn" id="사이즈" name="keyword" herf="#">
+              <i class="fab">사이즈</i>
+              <i class="fab">+</i>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="categorieText" id="IT/전자기기">
+        <p class="categorieName">IT/전자기기</p>
+        <ul>
+          <li>
+            <a class="btn" id="용량" name="keyword"  herf="#">
+              <i class="fab">용량</i>
+              <i class="fab">+</i>
+            </a>
+          </li>
+          <li>
+            <a class="btn" id="사양" name="keyword" herf="#">
+              <i class="fab">사양</i>
+              <i class="fab">+</i>
+            </a>
+          </li>
+          <li>
+            <a class="btn" id="사용기간" name="keyword" herf="#">
+              <i class="fab">사용기간</i>
+              <i class="fab">+</i>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="change" id="changeArea">
+      <a class="btn" id="change_a" herf="#">
+        <p class="change_Btn" id="changeBtn">변경</p>
+      </a>
+      <a class="btn" id="rechange_a" herf="#">
+        <p class="change_Btn" id="rechangeBtn">변경 전</p>
+      </a>
+    </div>
+    <div id="loadingImg" style='display: none;'></div>
+  </div>
+
+
+  </body>
+
+</html>

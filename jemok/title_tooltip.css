@@ -1,0 +1,16 @@
+.tooltipUI{
+  background-color: #FAF4C0;
+}
+
+.ui-tooltip{
+  padding: 8px;
+  position: absolute;
+  z-index: 9999;
+  max-width: 600px;
+  -webkit-box-shadow: 0 0 5px #aaa;
+  box-shadow: 0 0 5px #aaa;
+}
+
+body .ui-tooltip{
+  border-width: 2px;
+}

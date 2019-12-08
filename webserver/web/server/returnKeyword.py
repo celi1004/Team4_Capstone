@@ -29,21 +29,34 @@ def getName(string_list, docs_list, all_docs_list):
     return return_name
 
 def getClothesName(docs_list):
-    return_name = ""
+    return_name_list = []
     flag = 0
 
     for t, p in docs_list:
         for c in name:
             if c.split("/")[0] == t:
-                return_name = return_name + t + " "
-                flag = 1
-                break
+                if t in return_name_list:
+                    flag = 3
+                    break
+                else:
+                    if t == '투맨':
+                        t = '맨투맨'
+                    if t == '상':
+                        t = '야상'
+                    if t == '종':
+                        t = '블루종'
+                    return_name_list.append(t)
+                    flag = 1
+                    break
         if flag == 1 or flag ==2:
             flag = flag + 1
             continue
         elif flag ==3:
             break
-    return return_name
+    if len(return_name_list) == 0:
+        return '?'        
+    else:
+        return (" ".join(return_name_list)).strip()
 
 def getShoesName(all_docs_list):
     noun_lists = []
@@ -117,80 +130,200 @@ def getShoesName(all_docs_list):
 
     return_name = max(noun_lists, key=len) 
 
-    '''
-    return_name = ""
-    flag = 0
-    brand_appear = 0
-    global brand_name
-
-    for t, p in all_docs_list:
-        if p == 'Noun':
-            if brand_appear == 0:
-                for b in brand:
-                    if b.split("/")[0] == t:
-                        brand_appear = 1
-                        brand_name = t
-                        flag = 1
-                        break
-            if flag == 1:
-                continue
-            else:
-                return_name = return_name + t + " "
-                flag = 1
-        elif p == 'Alpha' or p == 'Number':
-            return_name = return_name + t + " "
-            flag = 1
-        else:
-            if flag == 1:
-                flag = flag + 1
-                continue
-            elif flag ==2:
-                break
-    '''
     return (" ".join(return_name)).replace(brand_name, "").replace(sel_color, "").strip().replace("  ", " ")
 
 def getItName(string_list, all_docs_list):
-    name_appear_flag = 0
-    return_keyword_string = ''
+
+    global cate
+    if cate == '핸드폰':
+        return getPhoneName(string_list, all_docs_list)
+    else:
+        return getNoteName(string_list, all_docs_list)
+
+def getPhoneName(string_list, all_docs_list):
+
+    name_appear = 0
+    alpha_appear_flag = 0
+    pre_t = ''
+    not_product_name_count = 0
+    return_keyword_list = []
 
     for t, p in all_docs_list:
-        if name_appear_flag != 2:
-            #이름 나온 적 없으면 사전돌면서 이름같은 것 찾아
-            #이름 다돌았는데도 없으면 2로 바꿔서 빠져나가자
-            if name_appear_flag == 1:
-                name_appear_flag = 2
+        if p == 'Alpha':
+            if t.lower() == "gb":
+                try:
+                    return_keyword_list.pop()
+                except:
+                    print("오잉")
+                if name_appear == 0:
+                    continue
+                else:
+                    break
+
+            alpha_appear_flag = 1
+            if t.lower() == 'I'.lower():
+                pre_t = 'i'
+                if name_appear == 1:
+                    break
+                else:
+                    continue
+            if t.lower() == 'MAX'.lower():
+                return_keyword_list.append(t)
+                name_appear = 1
+                continue
+            if t.lower() == 'pen'.lower():
+                return_keyword_list.append(t)
+                name_appear = 1
+                continue
+            return_keyword_list.append(t)
+        elif p == 'Number':
+            if pre_t != 'i':
+                return_keyword_list.append(t)
+            else:
+                continue
+        elif p == 'Noun':
+            if t == "기":
+                try:
+                    return_keyword_list.pop()
+                except:
+                    print("오잉")
+                if name_appear == 0:
+                    continue
+                else:
+                    break
             for n in name:
                 if n.split("/")[0] == t:
-                    if name_appear_flag == 0:
-                        #처음 나왔으면 1로 flag바꾸고 이 단어는 그만보고 그 뒤에 단어도 이름인가 보자
-                        name_appear_flag = 1
-                        return_keyword_string =  return_keyword_string + t
+                    if alpha_appear_flag == 0:
+                        return_keyword_list = []
+                        alpha_appear_flag = 1
+                    if t == '게이':
+                        return_keyword_list.append('게이밍')
                         break
-                    elif name_appear_flag == 1:
-                        #나온 후 연달아 이름이면 붙여주고 다음 단어 보러감
-                        return_keyword_string =  return_keyword_string + t
-                        break
+                    name_appear = 1
+                    return_keyword_list.append(t)
+                    break
+        elif t == '-':
+            return_keyword_list.append(t)
+        elif t == '+':
+            return_keyword_list.append(t)
         else:
+            not_product_name_count = not_product_name_count + 1
+
+        if not_product_name_count > 3:
             break
 
-    return return_keyword_string
+    return "".join(return_keyword_list)
+
+def getNoteName(string_list, all_docs_list):
+
+    return_keyword_list = []
+
+    first_num = 0
+    the_end = 0
+    name_appear = 0
+
+    global brand_name
+
+    for t, p in all_docs_list:
+        first_num = first_num + 1
+        if name_appear == 0 or the_end == 0:
+            if t.lower() == 'pen' or t.lower() == 'max':
+                return_keyword_list.append(t)
+            #이름같은게 안나옴
+            if p == 'Noun':
+                for n in name:
+                    if n.split("/")[0].lower() == t.lower():
+                        if t == '게이':
+                            return_keyword_list.append('게이밍')
+                            break
+                        name_appear = 1
+                        return_keyword_list.append(t)
+                        break
+                if name_appear == 1 and the_end == 0:
+                    the_end = 1
+                    return_keyword_list.append(" ")
+        else:
+            #나오고 숫자 영어 연달아인것만 출력
+            
+            if p == 'Alpha':
+                if t.lower() == 'i' or t.lower() == 'ssd' or t.lower() == 'hdd':
+                    break
+                if t.lower() == 'lg':
+                    brand_name = 'LG'
+                    continue
+                if t.lower() == 'hp':
+                    brand_name = 'HP'
+                    continue
+                if t.lower() == 'msi':
+                    brand_name = 'MSI'
+                    continue
+                if t.lower() == 'gb' or t.lower() == 'g' or t.lower() == 'ram':
+                    try:
+                        return_keyword_list.pop()
+                    except:
+                        print("오잉")
+                    break
+
+                if brand_name == '':
+                    for b in brand:
+                        if b.split("/")[0].lower() == t.lower():
+                            brand_name = t
+                            break
+                    #여기오는거보면 브랜드가 아닌 영어구나
+                    return_keyword_list.append(t)
+                else:
+                    if brand_name.lower() == t.lower():
+                        break
+                    else:
+                        #브랜드가 아닌 영어구나
+                        return_keyword_list.append(t)
+
+            elif p == 'Number':
+                if first_num < 3:
+                    continue
+                temp_list = re.findall("원", t)
+                if len(temp_list) > 0:
+                    break
+                if int (re.sub("\D*", "", t)) > 2000:
+                    break
+                return_keyword_list.append(t)
+            elif t == '-':
+                return_keyword_list.append(t)
+            elif t == '+':
+                return_keyword_list.append(t)
+            else:
+                break
+
+    return " ".join(return_keyword_list).replace(" ", "")
 
 def getBrand(string_list, docs_list):
     #브랜드 반환
     global brand_name
+    flag = 0
 
     if brand_name == '':
-        for b in brand:
-            for t, p in docs_list:
+        for t, p in docs_list:
+            if flag == 1:
+                flag = 2
+            for b in brand:
                 if b.split("/")[0].lower() == t.lower():
-                    brand_name = t
-                    return t
+                    if t == '키르':
+                        t = '키르시'
+                    if t == '노비':
+                        t = '노비스'
+                    flag = 1
+                    brand_name = brand_name +t
+                    break
+            if flag == 2:
+                return brand_name
     else:
         return brand_name
-    return "?"
+    return '?'
 
 def getPrice(string_list, docs_list):
     find_keyword = re.findall("[0-9일이삼사오육칠팔구십천만천백십/., ]+원",string_list)
+    find_keyword = list(filter(('원').__ne__, find_keyword))
+
 
     if len(find_keyword) == 1 :
         find_keyword = find_keyword[0].replace(" ", "")
@@ -228,11 +361,15 @@ def getState(string_list, docs_list):
     find_keyword = re.findall("\w+급", string_list)
     find_keyword = list(filter(('취급').__ne__, find_keyword))
     find_keyword = list(filter(('발급').__ne__, find_keyword))
+    find_keyword = list(filter(('자급').__ne__, find_keyword))
     find_keyword = list(filter(('동급').__ne__, find_keyword))
     find_keyword = list(filter(('지급').__ne__, find_keyword))
+    find_keyword = list(filter(('현금지급').__ne__, find_keyword))
 
-    if len(find_keyword) == 1 :
+    if len(find_keyword) == 1 and len(find_keyword[0]) < 5:
         find_keyword = find_keyword[0]
+    elif len(find_keyword) == 1:
+        find_keyword = find_keyword[0][-2:]
     elif len(find_keyword) > 1:
         find_keyword = find_keyword[0] 
     else:
@@ -240,6 +377,7 @@ def getState(string_list, docs_list):
         prepos = ''
 
         searchList = ["상태", "사용감", "보관", "퀄"]
+        #tODO 사용감일때 있다면 사용감있다
 
         tokenList= getAroundToken(docs_list, searchList)
 
@@ -250,13 +388,19 @@ def getState(string_list, docs_list):
                 if t[0] == '확인':
                     continue
                 if prepos != 'Adjective':
-                    find_keyword = t[0]
+                    find_keyword = t[0][:2]
                     prepos = t[1]
 
     find_keyword = find_keyword.replace("상품", "새상품")
     find_keyword = find_keyword.replace(" ", "")
-    find_keyword = find_keyword.replace("무용", "깨끗하다")
+    find_keyword = find_keyword.replace("무용", "깨끗")
     find_keyword = find_keyword.replace("미사", "미사용")
+    find_keyword = find_keyword.replace("있다", "사용감 O")
+    find_keyword = find_keyword.replace("정도", "사용감 O")
+    find_keyword = find_keyword.replace("없다", "오염 X")
+    find_keyword = find_keyword.replace("하자", "하자 X")
+    find_keyword = find_keyword.replace("그대", "보관만")
+    find_keyword = find_keyword.replace("한상", "보관만")
 
     if find_keyword == '?':
         searchList = ['미착용', '새상품', '미개봉', '새제품', '미 착용', '새 상품', '미 개봉', '새 제품', '미사용', '미 사용', '미시착', '미 시착', '새 상태', '새상태']
@@ -290,12 +434,12 @@ def getClothesColor(string_list, docs_list):
     global sel_color
 
     if sel_color == '':
-        find_keyword = re.findall("\w+ ?색",string_list)
-
+        find_keyword = re.findall("\w+색",string_list)
+        find_keyword = list(filter(('배색').__ne__, find_keyword))
         find_keyword = list(filter(('검색').__ne__, find_keyword))
         find_keyword = list(filter(('변색').__ne__, find_keyword))
 
-        if len(find_keyword) == 1 :
+        if len(find_keyword) == 1 and len(find_keyword[0]) < 5:
             find_keyword = find_keyword[0].replace(" ", "")
             return find_keyword
         elif len(find_keyword) > 1:
@@ -307,11 +451,14 @@ def getClothesColor(string_list, docs_list):
             tokenList= getAroundToken(docs_list, searchList)
             find_keyword = getMostSimilarityVerToken(tokenList, "베이지")
 
+        find_keyword = find_keyword.replace("벽돌", "벽돌색")
         find_keyword = find_keyword.replace(" ", "")
-        return find_keyword
+        if find_keyword == '?':
+            return getColorDic(docs_list)
+        else:
+            return find_keyword
     else:
         return sel_color
-    return "?"
 
 def getColorDic(docs_list):
     #색상 사전에서 일치하는 것 반환
@@ -358,24 +505,38 @@ def getMethod(string_list, docs_list):
     return find_keyword
 
 def getCount(string_list):
-    searchList = ['미착용', '새상품', '미개봉', '새제품', '미 착용', '새 상품', '미 개봉', '새 제품', '미사용', '미 사용', '미시착', '미 시착'] #완전히 한번도 안입은 거
-
-    for searchToken in searchList:
-        if searchToken in string_list:
-            find_keyword = '사용안함'
-            return find_keyword
     temp_keyword = re.findall("\d*-*~*\d+ ?[번회]",string_list)
 
-    if len(temp_keyword) == 1 :
+    if len(temp_keyword) == 1 and len(temp_keyword[0]) < 5 :
         find_keyword = temp_keyword[0]
-    elif len(temp_keyword) > 1:
+    elif len(temp_keyword) == 1:
+        find_keyword = temp_keyword[0][-2:]
+    elif len(temp_keyword) > 1 and len(temp_keyword[0]) < 5:
         find_keyword = temp_keyword[0] #'여러개야'
     else:
+
+        searchList = ['미착용', '새상품', '미개봉', '새제품', '미 착용', '새 상품', '미 개봉', '새 제품', '미사용', '미 사용', '미시착', '미 시착'] #완전히 한번도 안입은 거
+
+        for searchToken in searchList:
+            if searchToken in string_list:
+                find_keyword = '사용안함'
+                return find_keyword
+
         temp_keyword = re.findall("\w*-*~*\w+ ?[번회]",string_list)
         temp_keyword = list(filter(('안심번').__ne__, temp_keyword))
+        temp_keyword = list(filter(('즉시번').__ne__, temp_keyword))
+        temp_keyword = list(filter(('전화번').__ne__, temp_keyword))
+        temp_keyword = list(filter(('후회').__ne__, temp_keyword))
+        temp_keyword = list(filter(('첫번').__ne__, temp_keyword))
+        temp_keyword = list(filter(('이번').__ne__, temp_keyword))
+        temp_keyword = list(filter(('삼번').__ne__, temp_keyword))
+        temp_keyword = list(filter(('연주회').__ne__, temp_keyword))
 
         if len(temp_keyword) == 1 :
-            find_keyword = temp_keyword[0]
+            if len(temp_keyword[0])> 4:
+                find_keyword = '?'
+            else:
+                find_keyword = temp_keyword[0]
         elif len(temp_keyword) > 1:
             find_keyword = temp_keyword[0]#'여러개야'
         else:
@@ -402,29 +563,32 @@ def getSize(string_list, docs_list):
             if t[1] == 'Alpha':
                 tempAlphaSize = t[0]
             if t[1] == 'Number':
-                try:
-                    if token > int(t[0]):
-                        token = int(t[0])
-                except:
-                    if t[0].find('%') != -1:
-                        continue
-                    return t[0]
+                temp_list = re.findall("\D+", t[0])
+                compare_token = 0
+                if len(temp_list) > 0:
+                    temp_list = re.split("\D", t[0])
+                    temp_list = list(filter(('').__ne__, temp_list))
+                    compare_token = int(temp_list[len(temp_list)-1])
+                else:
+                    compare_token = int(t[0])
+                if token > compare_token:
+                    token = compare_token                    
                     
         if token == 1000000:
-            find_keyword = re.findall("\w* ?인치",string_list)
-            if len(find_keyword) == 1 :
-                find_keyword = find_keyword[0].replace(" ", "")
-                return find_keyword
-            find_keyword = re.findall("\d* ?mm",string_list, re.I)
-            if len(find_keyword) == 1 :
-                find_keyword = find_keyword[0].replace(" ", "")
-                return find_keyword
-            find_keyword = re.findall("\d* ?호",string_list)
-            if len(find_keyword) == 1 :
-                find_keyword = find_keyword[0].replace(" ", "")
-                return find_keyword
             if tempAlphaSize != '':
                 return tempAlphaSize
+            find_keyword = re.findall("\d*.?\d+ ?인치",string_list)
+            if len(find_keyword) == 1 :
+                find_keyword = find_keyword[0].replace(" ", "")
+                return find_keyword
+            find_keyword = re.findall("\d+ ?mm",string_list, re.I)
+            if len(find_keyword) == 1 :
+                find_keyword = find_keyword[0].replace(" ", "")
+                return find_keyword
+            find_keyword = re.findall("\d+ ?호",string_list)
+            if len(find_keyword) == 1 :
+                find_keyword = find_keyword[0].replace(" ", "")
+                return find_keyword
             return '?'
         else:
             return token
@@ -490,13 +654,13 @@ def getCapacity(string_list, docs_list):
             hdd = "HDD " + str(max(find_keyword)) + "GB"
             ssd = "SSD " + str(max(find_keyword)) + "GB"
             all = str(max(find_keyword)) + "GB" + " " + str(return_min_size) + "GB"
-            ram = "RAM " + str(return_min_size) + "GB"
+            ram = str(return_min_size) + "GB"
             if hardtype == 0:
                 find_keyword = ram
             elif hardtype == 1:
-                find_keyword = ssd + " " + ram
+                find_keyword = ssd + " " + "RAM " + ram
             elif hardtype == 2:
-                find_keyword = hdd + " " + ram
+                find_keyword = hdd + " " + "RAM " + ram
             else:
                 find_keyword = all
     else:
@@ -509,13 +673,20 @@ def getCapacity(string_list, docs_list):
 
 def getSpec(string_list, docs_list):
     return_keyword_string = ''
-    find_keyword = re.findall("\w+ ?인치", string_list, re.I)
+    find_keyword = re.findall("\d*.?\d+ ?인치", string_list, re.I)
     if len(find_keyword) > 0:
         return_keyword_string = return_keyword_string + find_keyword[0].replace(" ", "") + " "
 
     find_keyword = re.findall("i\d+", string_list, re.I)
     if len(find_keyword) > 0:
         return_keyword_string = return_keyword_string + find_keyword[0].replace(" ", "") + " "
+    else:
+
+        searchList = ['펜티엄', '셀레론'] #i3 5 7 아니고 다른 cpu
+
+        for searchToken in searchList:
+            if searchToken in string_list:
+                return_keyword_string = return_keyword_string + searchToken + " "
 
     find_keyword = re.findall("\d* ?.?\d+kg", string_list, re.I)
     if len(find_keyword) > 0:
@@ -526,7 +697,7 @@ def getSpec(string_list, docs_list):
 def getTerm(string_list):
     global cate
     #사용기간 반환
-    if cate == 'it':
+    if cate == '노트북' or cate == '핸드폰' :
         find_keyword = re.findall("\d+년|\d+월|\d+일", string_list)
     else:
         find_keyword = re.findall("\d+년|\d+월", string_list)
@@ -648,10 +819,13 @@ def selected_keyword(keyword_list, input_phrases):
     global sel_color
     global size_num
 
+    #_, _ = tokenize('') #훨씬 더 느려져..
+
     for input_phrase in input_phrases:
+        
         return_list = [] # 반환 할 키워드 목록들
 
-        if cate == 'it':
+        if cate == '노트북' or cate == '핸드폰':
             if len(input_phrase[2]) > 1000:
                 input_phrase[2]= input_phrase[2][:1000]
         else:
@@ -664,7 +838,7 @@ def selected_keyword(keyword_list, input_phrases):
         #[okt.pos(doc, norm=True, stem=True) for doc in input_strings]
 
         for keyword in keyword_list[1:]:
-            if keyword == '이름':
+            if keyword == '상품명':
                 find_keyword = getName(string_list, docs_list, all_docs_list)
             elif keyword =='브랜드':
                 find_keyword = getBrand(string_list, docs_list)
@@ -707,17 +881,17 @@ def recog_cate(input_list):
     global cate
     global model
     if '착용횟수' in input_list or '사이즈' in input_list:
-        model = gensim.models.Word2Vec.load('./model30000_20_4')
+        model = gensim.models.Word2Vec.load('./model/model30000_20_4')
         if input_list[0].find('남') != -1:
             if input_list[0].find('신발') != -1:
                 cate = '신발'
-                f = open("./sbrand.txt", 'r', encoding='utf-8-sig')
+                f = open("./dic/sbrand.txt", 'r', encoding='utf-8-sig')
                 while True:
                     line = f.readline()
                     if not line: break
                     brand.append(line)
                 f.close()
-                f = open("./scolor.txt", 'r', encoding='utf-8-sig')
+                f = open("./dic/scolor.txt", 'r', encoding='utf-8-sig')
                 while True:
                     line = f.readline()
                     if not line: break
@@ -725,28 +899,34 @@ def recog_cate(input_list):
                 f.close()
             else:
                 cate = '옷'
-                f = open("./mbrand.txt", 'r', encoding='utf-8-sig')
+                f = open("./dic/mbrand.txt", 'r', encoding='utf-8-sig')
                 while True:
                     line = f.readline()
                     if not line: break
                     brand.append(line)
                 f.close()
-                f = open("./mname.txt", 'r', encoding='utf-8-sig')
+                f = open("./dic/mname.txt", 'r', encoding='utf-8-sig')
                 while True:
                     line = f.readline()
                     if not line: break
                     name.append(line)
+                f.close()
+                f = open("./dic/ccolor.txt", 'r', encoding='utf-8-sig')
+                while True:
+                    line = f.readline()
+                    if not line: break
+                    color.append(line)
                 f.close()
         else:
             if input_list[0].find('신발') != -1:
                 cate = '신발'
-                f = open("./sbrand.txt", 'r', encoding='utf-8-sig')
+                f = open("./dic/sbrand.txt", 'r', encoding='utf-8-sig')
                 while True:
                     line = f.readline()
                     if not line: break
                     brand.append(line)
                 f.close()
-                f = open("./scolor.txt", 'r', encoding='utf-8-sig')
+                f = open("./dic/scolor.txt", 'r', encoding='utf-8-sig')
                 while True:
                     line = f.readline()
                     if not line: break
@@ -754,48 +934,57 @@ def recog_cate(input_list):
                 f.close()
             else:
                 cate = '옷'
-                f = open("./fbrand.txt", 'r', encoding='utf-8-sig')
+                f = open("./dic/fbrand.txt", 'r', encoding='utf-8-sig')
                 while True:
                     line = f.readline()
                     if not line: break
                     brand.append(line)
                 f.close()
-                f = open("./fname.txt", 'r', encoding='utf-8-sig')
+                f = open("./dic/fname.txt", 'r', encoding='utf-8-sig')
                 while True:
                     line = f.readline()
                     if not line: break
                     name.append(line)
                 f.close()
+                f = open("./dic/ccolor.txt", 'r', encoding='utf-8-sig')
+                while True:
+                    line = f.readline()
+                    if not line: break
+                    color.append(line)
+                f.close()
     elif '용량' in input_list or '사양' in input_list or '사용기간' in input_list:
-        cate = 'it'
-        f = open("./ibrand.txt", 'r', encoding='utf-8-sig')
+        if input_list[0].find('노') != -1:
+            cate = '노트북'
+        else:
+            cate = '핸드폰'
+        f = open("./dic/ibrand.txt", 'r', encoding='utf-8-sig')
         while True:
             line = f.readline()
             if not line: break
             brand.append(line)
         f.close()
-        f = open("./iname.txt", 'r', encoding='utf-8-sig')
+        f = open("./dic/iname.txt", 'r', encoding='utf-8-sig')
         while True:
             line = f.readline()
             if not line: break
             name.append(line)
         f.close()
-        f = open("./icolor.txt", 'r', encoding='utf-8-sig')
+        f = open("./dic/icolor.txt", 'r', encoding='utf-8-sig')
         while True:
             line = f.readline()
             if not line: break
             color.append(line)
         f.close()
     else:
-        f = open("./fbrand.txt", 'r', encoding='utf-8-sig')
-        while True:
-            line = f.readline()
-            if not line: break
-            brand.append(line)
-        f.close()
         if input_list[0].find('신발') != -1:
             cate = '신발'
-            f = open("./scolor.txt", 'r', encoding='utf-8-sig')
+            f = open("./dic/sbrand.txt", 'r', encoding='utf-8-sig')
+            while True:
+                line = f.readline()
+                if not line: break
+                brand.append(line)
+            f.close()
+            f = open("./dic/scolor.txt", 'r', encoding='utf-8-sig')
             while True:
                 line = f.readline()
                 if not line: break
@@ -803,11 +992,23 @@ def recog_cate(input_list):
             f.close()
         else:
             cate = '옷'
-            f = open("./fname.txt", 'r', encoding='utf-8-sig')
+            f = open("./dic/fbrand.txt", 'r', encoding='utf-8-sig')
+            while True:
+                line = f.readline()
+                if not line: break
+                brand.append(line)
+            f.close()
+            f = open("./dic/fname.txt", 'r', encoding='utf-8-sig')
             while True:
                 line = f.readline()
                 if not line: break
                 name.append(line)
+            f.close()
+            f = open("./dic/ccolor.txt", 'r', encoding='utf-8-sig')
+            while True:
+                line = f.readline()
+                if not line: break
+                color.append(line)
             f.close()
 
 #단어 하나를 토콘화
@@ -818,7 +1019,5 @@ def wordTokenize(doc):
 def main(input_args):
 
     recog_cate(input_args[0])
-
     return_list = selected_keyword(input_args[0], input_args[1:len(input_args)])
-
     return return_list

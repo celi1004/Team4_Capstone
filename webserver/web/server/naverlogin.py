@@ -42,11 +42,12 @@ def naverStart(category, keyword, crawlingData):
 
     crawlingData = crawlingData.replace("[", "")
     crawlingData = crawlingData.replace("]", "")
-    # crawlingData = crawlingData.replace("{", "")
     crawlingData = crawlingData.replace("}", "")
     crawlingData = crawlingData.replace("\'", "")
     crawlingData = crawlingData.replace("\"", "")
     crawlingData = crawlingData.replace("\n", "")
+    crawlingData = crawlingData.replace("\\n", "")
+    crawlingData = crawlingData.replace("\t", "")
     crawlingData = crawlingData.replace(",", "")
     data = crawlingData.split("{")
     # print(data)
@@ -149,16 +150,25 @@ def naverStart(category, keyword, crawlingData):
     # print(len(input))
     # print(len(input[1]))
 
-    start = time.time()
+    # print(input)
+    # start = time.time()
     return_list = returnKeyword.main(input)
-    print(time.time() - start)
+    # print(time.time() - start)
     
+    # print(return_list)
+    # print(number)
+    # print(key)
+
     temp = ""
     return_dict = {}
     for i in range(len(number)):
         temp = ""
-        for j in range(len(return_list[0])):
-            temp += "{:15}".format(" | " + str(key[j+1]) + " : " + str(return_list[i][j]))
+        # temp = "<pre>"
+        temp +=  str(key[1]) + " : " + str(return_list[i][0])
+        for j in range(len(return_list[0])-1):
+            temp += " | " + str(key[j+2]) + " : " + str(return_list[i][j+1])
+        # temp += "</pre>"
+        # print(temp)
         return_dict[number[i]] = temp
     
     # for key, value in return_dict.items():
@@ -166,55 +176,55 @@ def naverStart(category, keyword, crawlingData):
     
     return return_dict
 
-def imsipool(link):
+# def imsipool(link):
 
-    index = []
-    ti = ""
-    pri = 0
-    con = ""
-    # #게시글 번호로 접근
-    # naver.driver.get('https://m.cafe.naver.com/ArticleRead.nhn?clubid=' + clubid + '&articleid=' + link)
-    # html = naver.driver.page_source
-    soup = bs(link, 'html.parser')
+#     index = []
+#     ti = ""
+#     pri = 0
+#     con = ""
+#     # #게시글 번호로 접근
+#     # naver.driver.get('https://m.cafe.naver.com/ArticleRead.nhn?clubid=' + clubid + '&articleid=' + link)
+#     # html = naver.driver.page_source
+#     soup = bs(link, 'html.parser')
 
-    #제목 크롤링
-    t = soup.select(
-        'li[class=now]' # class가 now인 li 태그 수집
-    )
+#     #제목 크롤링
+#     t = soup.select(
+#         'li[class=now]' # class가 now인 li 태그 수집
+#     )
 
-    #가격 크롤링
-    p = soup.select(
-        'span[class=price]'  # class가 price인 span 태그 수집
-    )
+#     #가격 크롤링
+#     p = soup.select(
+#         'span[class=price]'  # class가 price인 span 태그 수집
+#     )
 
-    #본문 크롤링
-    c = soup.select(
-        'div[id=postContent]'  # id가 postContent인 div 태그 수집
-    )
+#     #본문 크롤링
+#     c = soup.select(
+#         'div[id=postContent]'  # id가 postContent인 div 태그 수집
+#     )
 
-    #본문내용 저장
-    for j in c:
-        p_elements = j.find_all("p")
-        result = ""
-        for k in p_elements:
-            result += k.text
-        #예외처리
-        result = result.replace("\n", "")
-        result = result.replace("\xa0", "")
-        result = result.replace("\t", "")
-        con = result
+#     #본문내용 저장
+#     for j in c:
+#         p_elements = j.find_all("p")
+#         result = ""
+#         for k in p_elements:
+#             result += k.text
+#         #예외처리
+#         result = result.replace("\n", "")
+#         result = result.replace("\xa0", "")
+#         result = result.replace("\t", "")
+#         con = result
 
-    #제목 임시저장
-    for j in t:
-        ti = j.text.split("\n")[5]
+#     #제목 임시저장
+#     for j in t:
+#         ti = j.text.split("\n")[5]
 
-    #가격 저장
-    for j in p:
-        pri = int(re.findall('\d+', j.text)[0]) * 1000
+#     #가격 저장
+#     for j in p:
+#         pri = int(re.findall('\d+', j.text)[0]) * 1000
 
-    index.append(ti)
-    index.append(pri)
-    index.append(con)
-    print(index)
-    # naver.driver.close()
-    # input.append(index)
+#     index.append(ti)
+#     index.append(pri)
+#     index.append(con)
+#     print(index)
+#     # naver.driver.close()
+#     # input.append(index)

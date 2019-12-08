@@ -1,0 +1,45 @@
+{
+  "name": "제몫",
+  "version": "0.0.1",
+  "manifest_version": 2,
+  "description": "게시판의 제목을 바꿔주는 확장프로그램입니다.",
+  "icons": {
+    "16": "images/title3.png",
+    "32": "images/title3.png",
+    "48": "images/title3.png",
+    "64": "images/title3.png",
+    "128": "images/title3.png"
+  },
+  "background":{
+    "scripts":[
+      "jquery-3.4.1.js",
+      "jquery-ui.min.js",
+      "jquery-ui.js",
+      "background.js",
+      "ClickBtn.js"
+    ],
+    "persistent": false
+  },
+  "permissions":[
+    "https://*/*",
+    "http://*/*",
+    "tabs",
+    "storage",
+    "alarms"
+  ],
+  "sidebar_action":{
+    "default_page": "sidebar.html",
+    "default_icon": {
+      "16": "images/title3.png"
+    },
+    "default_title":"제몫",
+    "use_navigation_bar": false
+  },
+  "content_scripts":[{
+    "run_at": "document_idle",
+    "matches": ["*://cafe.naver.com/*"],
+    "css":["title_tooltip.css"],
+    "js": ["jquery-3.4.1.js", "jquery-ui.js", "text_change.js"],
+    "all_frames":true
+  }]
+}
