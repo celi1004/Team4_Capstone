@@ -5,10 +5,10 @@ from bs4 import BeautifulSoup as bs
 
 if __name__ == "__main__":
     naver = Naver('', '')
-    clubid = "10050146"
+    clubid = ""
     #네이버 로그인
     try:
-        naver.clipboard_login("siso9800", "dundunsh!")
+        naver.clipboard_login("", "")
     finally:
         time.sleep(1)
 

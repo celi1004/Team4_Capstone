@@ -1,6 +1,5 @@
 from selenium import webdriver
 from utils.driverutils import DriverUtils
-from utils.winkeyboard import WinKeyboard
 import time
 
 
@@ -23,8 +22,6 @@ class Naver(object):
 
         self.explicit_wait_time = 1
         self.driver_utils = DriverUtils(self.driver)
-
-        self.keyboard = WinKeyboard()
 
     def clipboard_login(self, user_id, user_pw):
         self.driver.find_element_by_xpath('//*[@id="account"]/div/a/i').click()
