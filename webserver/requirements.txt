@@ -36,7 +36,7 @@ konlpy==0.5.1
 lxml==4.4.1
 MarkupSafe==1.1.1
 matplotlib==3.0.2
-nltk==3.4.3
+nltk==3.4.5
 numpy==1.17.4
 openpyxl==2.6.2
 pathspec==0.5.9
