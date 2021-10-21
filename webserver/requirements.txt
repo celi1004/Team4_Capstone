@@ -1,5 +1,5 @@
 awsebcli==3.16.0
-Babel==2.6.0
+Babel==2.9.1
 # beautifulsoup4==4.8.0
 boto==2.49.0
 boto3==1.10.26
