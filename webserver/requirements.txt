@@ -25,7 +25,7 @@ future==0.16.0
 gensim==3.8.1
 gunicorn==19.9.0
 gym==0.14.0
-httpie==1.0.2
+httpie==3.1.0
 idna==2.7
 jdcal==1.4.1
 Jinja2==2.10.1
