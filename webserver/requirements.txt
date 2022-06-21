@@ -37,7 +37,7 @@ lxml==4.4.1
 MarkupSafe==1.1.1
 matplotlib==3.0.2
 nltk==3.4.3
-numpy==1.17.4
+numpy==1.22.0
 openpyxl==2.6.2
 pathspec==0.5.9
 phonenumbers==8.10.12
